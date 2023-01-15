@@ -92,6 +92,7 @@ CREATE TABLE IF NOT EXISTS shop_db.history_order(
  product_in_order_id integer references shop_db.product_in_order(id)on delete cascade default null
 );
 ----------------------------------1 Trigger+Procedure----------------------------------
+--Добавление в таблицу с историей проектов, строчек создания заказа
 CREATE OR REPLACE FUNCTION shop_db.addhistory() RETURNS TRIGGER
 AS $$
  BEGIN
@@ -106,6 +107,7 @@ FOR EACH ROW EXECUTE PROCEDURE shop_db.addhistory();
 
 --DROP TRIGGER IF EXISTS add_history ON shop_db.order;
 ----------------------------------2 Trigger+Procedure----------------------------------
+--Обновление статуса после регистрации
 CREATE OR REPLACE FUNCTION shop_db.add_status_user() RETURNS TRIGGER
 AS $$
  BEGIN
@@ -120,6 +122,7 @@ FOR EACH ROW EXECUTE PROCEDURE shop_db.add_status_user();
 
 --DROP TRIGGER IF EXISTS add_user ON shop_db.private_information;
 ----------------------------------3 Trigger+Procedure----------------------------------
+--Добавление статуса поставщика
 CREATE OR REPLACE FUNCTION shop_db.add_status_provider() RETURNS TRIGGER
 AS $$
  BEGIN
@@ -137,6 +140,7 @@ CREATE TRIGGER add_provider BEFORE INSERT ON shop_db.provider
 FOR EACH ROW EXECUTE PROCEDURE shop_db.add_status_provider();
 --DROP TRIGGER IF EXISTS  add_provider ON shop_db.provider;
 ----------------------------------4 Trigger+Procedure----------------------------------
+--Проверка, если товар уже доставлен, статус нельзя изменить
 CREATE OR REPLACE FUNCTION shop_db.check_status() RETURNS TRIGGER
 AS $$
  BEGIN
@@ -153,6 +157,7 @@ FOR EACH ROW EXECUTE PROCEDURE shop_db.check_status();
 
 --DROP TRIGGER IF EXISTS  check_status ON shop_db.product_in_order;
 ----------------------------------5 Trigger+Procedure----------------------------------
+--Добавление в историю заказав строчек обозначающих, что товар доставлен и что заказ исполнен
 CREATE OR REPLACE FUNCTION shop_db.check_finish() RETURNS TRIGGER
 AS $$
  BEGIN
@@ -175,6 +180,7 @@ CREATE TRIGGER check_finish AFTER UPDATE ON shop_db.product_in_order
 FOR EACH ROW EXECUTE PROCEDURE shop_db.check_finish();
 --DROP TRIGGER IF EXISTS  check_finish ON shop_db.product_in_order;
 ----------------------------------6 Trigger+Procedure----------------------------------
+--Добавление в историю заказав строчек, что товар добавлен в заказ
 CREATE OR REPLACE FUNCTION shop_db.add_product() RETURNS TRIGGER
 AS $$
  BEGIN
@@ -191,6 +197,7 @@ FOR EACH ROW EXECUTE PROCEDURE shop_db.add_product();
 
 --DROP TRIGGER IF EXISTS add_product ON shop_db.product_in_order;
 ----------------------------------7 Trigger+Procedure----------------------------------
+--Вычитание товара при заказе
 CREATE OR REPLACE FUNCTION shop_db.minus_product() RETURNS TRIGGER
 AS $$
  BEGIN
@@ -205,6 +212,7 @@ FOR EACH ROW EXECUTE PROCEDURE shop_db.minus_product();
 
 --DROP TRIGGER IF EXISTS minus_product ON shop_db.product_in_order;
 ----------------------------------8 Trigger+Procedure----------------------------------
+--Проверка, что пароли не повторяются
 CREATE OR REPLACE FUNCTION shop_db.check_password() RETURNS TRIGGER
 AS $$
  BEGIN
@@ -221,6 +229,7 @@ CREATE TRIGGER check_password BEFORE INSERT ON shop_db.private_information
 FOR EACH ROW EXECUTE PROCEDURE shop_db.check_password();
 --DROP TRIGGER IF EXISTS check_password ON shop_db.check_password;
 ----------------------------------9 Trigger+Procedure----------------------------------
+--Проверка, что карта и адрес принадлежат пользователю при создании заказа
 CREATE OR REPLACE FUNCTION shop_db.address_cart() RETURNS TRIGGER
 AS $$
  BEGIN
